@@ -20,10 +20,10 @@ const RootLayout = () => {
         <ul className="menu bg-base-200 min-h-full w-80 p-4">
           {/* Sidebar content here */}
           <li>
-            <Link to="/">Dashboard</Link>
+            <Link to="/">Itemmaster</Link>
           </li>
           <li>
-            <Link to="/products">Products</Link>
+            <Link to="/availableProducts">Available Products</Link>
           </li>
         </ul>
       </div>
