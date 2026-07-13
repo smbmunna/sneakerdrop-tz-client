@@ -3,10 +3,11 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useAuth from "../hooks/useAuth";
 import ProductImage from "../components/ProductImage";
+import { useState } from "react";
 
 export default function AvailableProducts() {
   //managing purchase state
-  //const [purchaseState, setPurchaseState] = useState('');
+  const [loadingItem, setLoadingItem] = useState(null);
   const { user } = useAuth();
   //load products using axios and tanstack query
   const axiosSecure = useAxiosSecure();
@@ -23,20 +24,31 @@ export default function AvailableProducts() {
   });
 
   //reserve item
-  const handleReserve = async (itemcode) => {
-    await axiosSecure
-      .post(`/reserve/${itemcode}`)
-      .then((res) => {
-        refetch();
-        if (res.statusText == "OK") {
-          Swal.fire("Item reserved for 60 seconds!");
-          //setPurchaseState('reserved');
-        }
-      })
-      .catch((err) => {
-        Swal.fire("Error", err.response?.data?.error || "Failed", "error");
-        console.error(err);
+  const handleReserve = async (itemCode) => {
+    setLoadingItem(itemCode);
+    try {
+      const res = await axiosSecure.post(`/api/reservations/${itemCode}`, {
+        userId: user?.email,
       });
+
+      refetch();
+
+      Swal.fire({
+        icon: "success",
+        title: "Item reserved!",
+        text: "Your reservation will expire in 60 seconds.",
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Reservation Failed",
+        text: err.response?.data?.message || "Something went wrong",
+      });
+
+      console.error(err);
+    } finally {
+      setLoadingItem(null);
+    }
   };
 
   //Purchase item
@@ -103,10 +115,13 @@ export default function AvailableProducts() {
                     </button>
                   ) : (
                     <button
+                      disabled={loadingItem === item.item_code}
+                      className="btn btn-soft btn-success btn-xm"
                       onClick={() => handleReserve(item.item_code)}
-                      className="btn btn-soft btn-primary btn-xm"
                     >
-                      Reserve
+                      {loadingItem === item.item_code
+                        ? "Reserving..."
+                        : "Reserve"}
                     </button>
                   )}
                 </td>
