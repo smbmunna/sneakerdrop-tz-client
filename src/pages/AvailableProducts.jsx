@@ -52,30 +52,53 @@ export default function AvailableProducts() {
   };
 
   //Purchase item
-  const handlePurchase = async (itemcode) => {
+  // const handlePurchase = async (itemcode) => {
+  //   try {
+  //     const res = await axiosSecure.post(`/purchase/${itemcode}`);
+
+  //     if (res.status === 200) {
+  //       refetch();
+  //       const userData = {
+  //         name: user?.displayName,
+  //         email: user?.email,
+  //       };
+  //       await axiosSecure.post("/userPurchase", userData);
+  //       //console.log(userPurchaseRes.data);
+
+  //       Swal.fire("Success!", "Item purchased successfully!", "success");
+  //     }
+  //   } catch (err) {
+  //     console.error("Purchase error:", err);
+  //     Swal.fire(
+  //       "Error",
+  //       err.response?.data?.error || "Failed to purchase",
+  //       "error",
+  //     );
+  //   }
+  // };
+
+  const handlePurchase = async (itemCode) => {
     try {
-      const res = await axiosSecure.post(`/purchase/${itemcode}`);
+      const res = await axiosSecure.post(`/api/purchases/${itemCode}`, {
+        userId: user.email,
+      });
 
-      if (res.status === 200) {
-        refetch();
-        const userData = {
-          name: user?.displayName,
-          email: user?.email,
-        };
-        await axiosSecure.post("/userPurchase", userData);
-        //console.log(userPurchaseRes.data);
+      refetch();
 
-        Swal.fire("Success!", "Item purchased successfully!", "success");
-      }
+      Swal.fire({
+        icon: "success",
+        title: "Purchase Successful!",
+        text: res.data.message,
+      });
     } catch (err) {
-      console.error("Purchase error:", err);
-      Swal.fire(
-        "Error",
-        err.response?.data?.error || "Failed to purchase",
-        "error",
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Purchase Failed",
+        text: err.response?.data?.message || "Something went wrong",
+      });
     }
   };
+
   return (
     <div>
       <div className="overflow-x-auto">
@@ -106,14 +129,15 @@ export default function AvailableProducts() {
                 <td>{item.stock}</td>
                 <td>{item.price}</td>
                 <td>
-                  {item.is_reserved ? (
+                  {/* {item.is_reserved ? ( */}
                     <button
                       onClick={() => handlePurchase(item.item_code)}
                       className="btn btn-soft btn-accent btn-xm"
                     >
                       Purchase
                     </button>
-                  ) : (
+                  {/* ) : ( */}
+                    
                     <button
                       disabled={loadingItem === item.item_code}
                       className="btn btn-soft btn-success btn-xm"
@@ -123,7 +147,7 @@ export default function AvailableProducts() {
                         ? "Reserving..."
                         : "Reserve"}
                     </button>
-                  )}
+                  {/* )} */}
                 </td>
               </tr>
             ))}
