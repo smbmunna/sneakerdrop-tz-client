@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 //import Products from "../pages/Products";
 import AvailableProducts from "../pages/AvailableProducts";
 import Login from "../pages/Login";
+import NewDrop from "../pages/NewDrop";
 
 
 
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
         {
             path: 'login',             
             Component: Login
+        },
+        {
+            path: 'newDrop',             
+            Component: NewDrop
         },
     ]
   },

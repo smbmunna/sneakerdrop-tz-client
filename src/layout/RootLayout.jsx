@@ -25,6 +25,9 @@ const RootLayout = () => {
           <li>
             <Link to="/availableProducts">Available Products</Link>
           </li>
+          <li>
+            <Link to="/newDrop">New Drop</Link>
+          </li>
         </ul>
       </div>
     </div>
