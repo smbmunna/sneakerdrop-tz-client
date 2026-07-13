@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import ProductImage from "../components/ProductImage";
-import socket from "../socket";
+//import socket from "../socket";
 import { useEffect } from "react";
 
 export default function AllProducts() {
@@ -20,20 +20,22 @@ export default function AllProducts() {
   } = useQuery({
     queryKey: ["sneakerItems"],
     queryFn: fetchItems,
+    refetchInterval: 1000, // every 1 second
+    refetchIntervalInBackground: true,
   });
 
-  useEffect(() => {
-    const handleReservation = () => {
-      console.log("Stock updated");
-      refetch();
-    };
+  // useEffect(() => {
+  //   const handleReservation = () => {
+  //     console.log("Stock updated");
+  //     refetch();
+  //   };
 
-    socket.on("reservationCreated", handleReservation);
+  //   socket.on("reservationCreated", handleReservation);
 
-    return () => {
-      socket.off("reservationCreated", handleReservation);
-    };
-  }, [refetch]);
+  //   return () => {
+  //     socket.off("reservationCreated", handleReservation);
+  //   };
+  // }, [refetch]);
 
   if (isLoading) {
     return (

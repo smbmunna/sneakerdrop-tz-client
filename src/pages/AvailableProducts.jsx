@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import useAuth from "../hooks/useAuth";
 import ProductImage from "../components/ProductImage";
 import { useState, useEffect } from "react";
-import socket from "../socket";
+//import socket from "../socket";
 
 export default function AvailableProducts() {
   //managing purchase state
