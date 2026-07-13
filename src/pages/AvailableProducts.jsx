@@ -3,7 +3,8 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useAuth from "../hooks/useAuth";
 import ProductImage from "../components/ProductImage";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import socket from "../socket";
 
 export default function AvailableProducts() {
   //managing purchase state
@@ -13,13 +14,14 @@ export default function AvailableProducts() {
   const axiosSecure = useAxiosSecure();
   const fetchItems = async () => {
     const response = await axiosSecure("/api/drops");
+
     //console.log(response.data);
     return response.data.data;
   };
   const { data: items = [], refetch } = useQuery({
     queryKey: ["drops"],
     queryFn: fetchItems,
-    refetchInterval: 3000, // refresh every 5 seconds
+    refetchInterval: 2000, // refresh every 5 seconds
     refetchIntervalInBackground: true,
   });
 
@@ -31,13 +33,13 @@ export default function AvailableProducts() {
         userId: user?.email,
       });
 
-      refetch();
-
       Swal.fire({
         icon: "success",
         title: "Item reserved!",
         text: "Your reservation will expire in 60 seconds.",
       });
+
+      refetch();
     } catch (err) {
       Swal.fire({
         icon: "error",
@@ -130,23 +132,23 @@ export default function AvailableProducts() {
                 <td>{item.price}</td>
                 <td>
                   {/* {item.is_reserved ? ( */}
-                    <button
-                      onClick={() => handlePurchase(item.item_code)}
-                      className="btn btn-soft btn-accent btn-xm"
-                    >
-                      Purchase
-                    </button>
+                  <button
+                    onClick={() => handlePurchase(item.item_code)}
+                    className="btn btn-soft btn-accent btn-xm"
+                  >
+                    Purchase
+                  </button>
                   {/* ) : ( */}
-                    
-                    <button
-                      disabled={loadingItem === item.item_code}
-                      className="btn btn-soft btn-success btn-xm"
-                      onClick={() => handleReserve(item.item_code)}
-                    >
-                      {loadingItem === item.item_code
-                        ? "Reserving..."
-                        : "Reserve"}
-                    </button>
+
+                  <button
+                    disabled={loadingItem === item.item_code}
+                    className="btn btn-soft btn-success btn-xm"
+                    onClick={() => handleReserve(item.item_code)}
+                  >
+                    {loadingItem === item.item_code
+                      ? "Reserving..."
+                      : "Reserve"}
+                  </button>
                   {/* )} */}
                 </td>
               </tr>

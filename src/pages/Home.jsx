@@ -1,19 +1,39 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import ProductImage from "../components/ProductImage";
+import socket from "../socket";
+import { useEffect } from "react";
 
 export default function AllProducts() {
   const axiosSecure = useAxiosSecure();
 
   const fetchItems = async () => {
-    const response = await axiosSecure("/api/items");    
+    const response = await axiosSecure("/api/items");
+
     return response.data.data;
   };
 
-  const { data: items = [], isLoading } = useQuery({
+  const {
+    data: items = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["sneakerItems"],
     queryFn: fetchItems,
   });
+
+  useEffect(() => {
+    const handleReservation = () => {
+      console.log("Stock updated");
+      refetch();
+    };
+
+    socket.on("reservationCreated", handleReservation);
+
+    return () => {
+      socket.off("reservationCreated", handleReservation);
+    };
+  }, [refetch]);
 
   if (isLoading) {
     return (
@@ -24,7 +44,7 @@ export default function AllProducts() {
   }
 
   return (
-    <div>      
+    <div>
       <div className="overflow-x-auto">
         <table className="table">
           {/* head */}
@@ -44,8 +64,8 @@ export default function AllProducts() {
                   {" "}
                   <div className="avatar">
                     <div className="rounded-lg h-12 w-12 bg-gray-50 border border-gray-100 overflow-hidden">
-                        <ProductImage src={item.image} alt={item.item_name} />
-                      </div>
+                      <ProductImage src={item.image} alt={item.item_name} />
+                    </div>
                   </div>
                 </td>
                 <td>{item.item_code}</td>
