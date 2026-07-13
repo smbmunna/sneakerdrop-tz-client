@@ -25,6 +25,10 @@ A backend API for a limited-edition sneaker drop system built with **Node.js**, 
 
 ---
 
+## 🌐 Live Demo
+
+**Client:** https://sneakerdrop-tz-client.vercel.app/
+
 # Project Setup
 
 ## 1. Clone the repository
