@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth";
-//import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 
 
 const Login = () => {
@@ -31,7 +31,7 @@ const Login = () => {
     }
     return (
         <div>
-            <h1 className="font-semibold text-xl mb-32">Login Page </h1>
+            <h1 className="font-semibold text-xl mb-16">Login Page </h1>
             <button onClick={handleGoogleLogin} className="btn btn-soft btn-secondary">Google Login</button>
         </div>
     )
